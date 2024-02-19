@@ -7,7 +7,7 @@ Also, this version uses dependencies that are easier and less finicky to install
 Installation requires [git](https://github.com/git-guides/install-git) and [conda](https://www.anaconda.com/download).
 Run the following bash commands from a folder of your choice:
 ```bash
-git clone https://github.com/marcovirgolin/gpg.git
+git clone https://github.com/lurovi/gpg.git
 cd gpg
 conda env create -f environment.yml
 conda activate gpg
