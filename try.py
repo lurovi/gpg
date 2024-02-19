@@ -3,6 +3,12 @@ from pygpg.sk import GPGRegressor
 from pygpg.complexity import compute_complexity
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
+from sklearn.model_selection import GridSearchCV
+import sympy
+from sympy import srepr
+from sympy import UnevaluatedExpr
+
 
 RANDOM_SEED = 42
 np.random.seed(RANDOM_SEED)
@@ -18,14 +24,25 @@ y = grav_law(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=RANDOM_SEED)
 
 gpg = GPGRegressor(
-  e=50_000,                   # 50,000 evaluations limit for search
-  t=-1,                       # no time limit,
-  g=-1,                       # no generation limit,
-  d=3,                        # maximum tree depth
-  finetune=True,              # whether to fine-tune the coefficients after the search
-  finetune_max_evals=10_000,  # 10,000 evaluations limit for fine-tuning
+  e=-1,                   # fitness evaluations
+  t=-1,                       # time limit,
+  g=10,                       # generations
+  d=5,                        # maximum tree depth
+  finetune=False,              # whether to fine-tune the coefficients after the search
+  disable_ims=True,
+  #finetune_max_evals=10_000,  # 10,000 evaluations limit for fine-tuning
   verbose=True,               # print progress
   random_state=RANDOM_SEED,   # for reproducibility
+  pop=20,
+  bs=20,
+  fset='+,-,*,/',
+  tour=5,
+  no_univ_exc_leaves_fos=False,
+  #rci=0.05,
+  #cmp=0.0,
+  nolink=False,
+  feat_sel=False,
+  no_large_fos=True
 )
 #gpg = GPGRegressor(
 #  t=10, g=-1, e=100000, disable_ims=False, pop=512,
@@ -34,7 +51,12 @@ gpg = GPGRegressor(
 #  d=5, rci=0.05, finetune=False, verbose=True, tour=4, random_state=42, cmp=0.0
 #)
 
+#hyper_params = {'rci': [0.05, 0.1], 'cmp': [0.0, 0.1]}
+#cv = KFold(n_splits=3, n_repeats=3, random_state=RANDOM_SEED)
+#search = GridSearchCV(gpg, hyper_params, scoring='neg_root_mean_squared_error', n_jobs=-1, cv=KFold(3, shuffle=False, random_state=None), refit=True)
+
 gpg.fit(X_train,y_train)
+
 print(
   "Best found:",
   gpg.model, 
@@ -47,6 +69,7 @@ print("Test\t\tR2: {}\t\tMSE: {}".format(
   np.round(r2_score(y_test, gpg.predict(X_test)), 3),
   np.round(mean_squared_error(y_test, gpg.predict(X_test)), 3),
 ))
+#print(count_sympy_tree_nodes(search.best_estimator_.model) )
 
 quit()
 
