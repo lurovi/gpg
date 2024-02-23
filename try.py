@@ -34,7 +34,6 @@ gpg = GPGRegressor(
   verbose=True,               # print progress
   random_state=RANDOM_SEED,   # for reproducibility
   pop=20,
-  bs=20,
   fset='+,-,*,/',
   tour=5,
   no_univ_exc_leaves_fos=False,
