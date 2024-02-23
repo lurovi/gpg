@@ -184,7 +184,7 @@ class GPGRegressor(BaseEstimator, RegressorMixin):
     # deal with a model that was simplified to a simple constant
     if type(model) == sympy.Float or type(model) == sympy.Integer:
       prediction = np.array([float(model)]*X.shape[0])
-      return np.core.umath.clip(prediction, -1e+50, 1e+50)
+      return np.core.umath.clip(prediction, -1e+20, 1e+20)
 
     f = conversion.sympy_to_numpy_fn(model, timeout=5)
     if f is None:
@@ -208,4 +208,4 @@ class GPGRegressor(BaseEstimator, RegressorMixin):
     if len(prediction) != X.shape[0]:
       prediction = np.array([prediction[0]]*X.shape[0])
 
-    return np.core.umath.clip(prediction, -1e+50, 1e+50)
+    return np.core.umath.clip(prediction, -1e+20, 1e+20)
