@@ -188,8 +188,8 @@ class GPGRegressor(BaseEstimator, RegressorMixin):
 
     f = conversion.sympy_to_numpy_fn(model, timeout=5)
     if f is None:
-      print("[!] Warning: failed to convert sympy model to numpy, returning NaN as prediction")
-      return float("nan")
+      print("[!] Warning: failed to convert sympy model to numpy, returning 1e+50 as prediction")
+      return float(1e+50)
 
     if np.isnan(X).any():
       assert(hasattr(self, "imputer"))
@@ -198,8 +198,8 @@ class GPGRegressor(BaseEstimator, RegressorMixin):
     try:
       prediction = f(X)
     except:
-      print("[!] Warning: failed to evaluate sympy model, returning NaN as prediction")
-      return float("nan")
+      print("[!] Warning: failed to evaluate sympy model, returning 1e+50 as prediction")
+      return float(1e+50)
     
     # can still happen for certain classes of sympy 
     # (e.g., sympy.core.numbers.Zero)
